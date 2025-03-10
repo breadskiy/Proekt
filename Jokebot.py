@@ -29,7 +29,7 @@ class JokeBot:
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
 
-        # Проверяем, существуют ли таблицы, и создаем их только если они не существуют
+        # Проверка существования таблицы
         cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS jokes (
@@ -63,7 +63,7 @@ class JokeBot:
 
         conn.commit()
 
-        # Добавляем 3 анекдота в базу данных (если их ещё нет)
+        # Заносим в переменную анекдоты
         jokes = [
             ("У чукчи спрашивают: Чья космонавтика самая лучшая в мире?\n- НАСА, - гордо ответил чукча."),
             ("В дверь кто-то вежливо постучал ногой.\n- Безруков! - догадался Штирлиц."),
@@ -88,14 +88,14 @@ class JokeBot:
             "Вдруг чудесным образом появляется свободное местечко. Мужик снова обращается к небу:\n— А, всё, не надо. Нашёл!")
         ]
 
-        # Добавляем анекдоты в базу данных, если они еще не существуют
+        # Проверка на наличие и добавление анекдота 
         for joke in jokes:
             cursor.execute("SELECT id FROM jokes WHERE text = ?", (joke,))
             if cursor.fetchone() is None:  # Если анекдот не существует, добавляем его
                 cursor.execute("INSERT INTO jokes (text) VALUES (?)", (joke,))
         conn.commit()
 
-        # Инициализируем таблицу статистики для анекдотов, если они ещё не добавлены
+        #Инициализируем таблицу статистики для анекдотов, если они ещё не добавлены
         cursor.execute("SELECT id FROM jokes")
         joke_ids = cursor.fetchall()
         for joke_id in joke_ids:
@@ -131,7 +131,6 @@ class JokeBot:
     async def get_joke(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Вывод случайного анекдота, исключая последний показанный"""
         
-        # Проверяем, если обновление от кнопки
         if update.callback_query:
             chat_id = update.callback_query.message.chat_id
             user_name = update.callback_query.from_user.username
@@ -178,11 +177,11 @@ class JokeBot:
                 # Создаем кнопки для оценки и для получения следующего анекдота
                 keyboard = [
                     [InlineKeyboardButton(str(i), callback_data=str(i)) for i in range(1, 6)],
-                    [InlineKeyboardButton("Далее", callback_data="next_joke")]  # Кнопка для получения следующего анекдота
+                    [InlineKeyboardButton("Далее", callback_data="next_joke")]  # Кнопка Далее
                 ]
                 reply_markup = InlineKeyboardMarkup(keyboard)
 
-                # Отправляем анекдот без лишнего повторения слова "анекдот"
+                # Отправляем анекдот
                 if update.callback_query:
                     await update.callback_query.message.edit_text(f"{joke[0]}\n\nСредняя оценка: {avg_rating:.2f}\n\nПожалуйста, оцените:", reply_markup=reply_markup)
                 else:
@@ -278,7 +277,7 @@ class JokeBot:
                 keyboard = [[InlineKeyboardButton("Далее", callback_data="next_joke")]]
                 reply_markup = InlineKeyboardMarkup(keyboard)
 
-                # Отправляем новое сообщение с благодарностью за отзыв и кнопкой "Далее"
+                # Отправляем новое сообщение с благодарностью за отзыв и кнопкой Далее
                 await query.message.edit_text(
                     f"Анекдот:\n{query.message.text}\n\n"
                     f"Спасибо за вашу оценку! Средняя оценка: {new_avg_rating:.2f}\n"
