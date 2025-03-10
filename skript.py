@@ -1,6 +1,6 @@
 import qrcode
 
-bot_link = "https://t.me/jokeboting_bot"
+bot_link = "*" # Вместо звездочки необходимо написать адрес сайта
 
 qr = qrcode.QRCode(
     version=2,  
