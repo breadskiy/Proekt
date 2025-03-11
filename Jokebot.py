@@ -9,7 +9,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, fil
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-TOKEN = "8144970525:AAFbfkIvEL7_Wzeefl0TfoegnmFZR_Xxypg"  
+TOKEN = "здесь будет находиться токен бота"  
 DB_NAME = "jokes.db"
 
 class JokeBot:
