@@ -25,7 +25,7 @@ class JokeBot:
         logger.info("Обработчики зарегистрированы")
 
     def init_db(self):
-        """Инициализация базы данных и добавление анекдотов с вычислением средней оценки"""
+        """Инициализация базы данных"""
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
 
